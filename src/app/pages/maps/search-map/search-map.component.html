@@ -1,7 +1,7 @@
 <nb-card>
-  <div class="container">
-    <h1>Google Maps</h1>
+  <nb-card-header>Google Maps with search</nb-card-header>
+  <nb-card-body>
     <ngx-search (positionChanged)="updateLocation($event)"></ngx-search>
     <ngx-map [searchedLocation]="searchedLocation"></ngx-map>
-  </div>
+  </nb-card-body>
 </nb-card>

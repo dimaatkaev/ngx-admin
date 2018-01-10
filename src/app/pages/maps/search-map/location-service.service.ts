@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class LocationService {
 
-  private key: string = 'AIzaSyDU7nlRcJTW0VhnfCMkLytn4lhtvaXtF3w';
-  private address: string = 'address=';
-  private scheme: string = 'https://';
-  private path: string = 'maps.googleapis.com/maps/api/geocode/json';
+  private key = 'AIzaSyDU7nlRcJTW0VhnfCMkLytn4lhtvaXtF3w';
 
   constructor(private http: Http) {
   }
 
   searchByAddress(location: string): Observable<any> {
-    const query: string = this.scheme + this.path + '?' + this.address + location + '&' + this.key;
-    return this.http.get(query).map(result => result.json());
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json';
+    return this.http.get(url, {
+      params: {
+        address: location,
+        key: this.key,
+      },
+    }).map((result: Response) => result.json());
   }
 }
