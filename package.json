@@ -54,6 +54,7 @@
     "core-js": "2.5.1",
     "d3": "4.8.0",
     "font-awesome": "4.7.0",
+    "geocoder": "0.2.3",
     "intl": "1.2.5",
     "ionicons": "2.0.1",
     "leaflet": "1.0.3",

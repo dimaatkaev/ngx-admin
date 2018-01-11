@@ -20,7 +20,7 @@ export class SearchComponent {
   }
 
   onSearch(address: string): void {
-    this.locationService.searchByAddress(address)
+    this.locationService.searchLocation(address)
       .map((response: any) => {
         if (response && response.results) {
           return response;
