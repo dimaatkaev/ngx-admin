@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import * as googlemaps from '@google/maps';
 
-console.log(googlemaps);
 @Component({
   selector: 'ngx-gmaps',
   styleUrls: ['./gmaps.component.scss'],

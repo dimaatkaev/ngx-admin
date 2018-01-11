@@ -7,6 +7,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { MapsRoutingModule, routedComponents } from './maps-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { LocationService } from './search-map/location-service.service';
 
 @NgModule({
@@ -19,6 +20,7 @@ import { LocationService } from './search-map/location-service.service';
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    HttpClientModule,
   ],
   exports: [],
   declarations: [
@@ -29,5 +31,4 @@ import { LocationService } from './search-map/location-service.service';
   ],
 })
 
-export class MapsModule {
-}
+export class MapsModule { }
