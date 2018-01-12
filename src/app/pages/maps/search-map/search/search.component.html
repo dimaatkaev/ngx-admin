@@ -1,6 +1,7 @@
 <div class="form-group">
   <form (submit)="onSearch(searchBox.value)">
-    <input list="locations" class="form-control" autofocus #searchBox id="search-box" (keyup)="keyUp(searchBox.value)"/>
+    <input list="locations" class="form-control" autofocus #searchBox id="search-box"
+           [formControl]="search"/>
 
     <datalist id="locations">
       <option *ngFor="let location of locations$ | async">

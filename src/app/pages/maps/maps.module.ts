@@ -5,7 +5,7 @@ import { AngularEchartsModule } from 'ngx-echarts';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { MapsRoutingModule, routedComponents } from './maps-routing.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { LocationService } from './search-map/location-service.service';
@@ -18,7 +18,6 @@ import { LocationService } from './search-map/location-service.service';
     MapsRoutingModule,
     AngularEchartsModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpModule,
     HttpClientModule,
   ],
