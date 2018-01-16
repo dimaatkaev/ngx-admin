@@ -36,7 +36,8 @@ export class SearchComponent implements OnInit {
             return;
           }
         }
-        this.locationService.getLocations(currentTerm, this.locations$);
+        this.locationService.getLocations(currentTerm)
+          .subscribe(this.locations$);
       }).subscribe();
   }
 }

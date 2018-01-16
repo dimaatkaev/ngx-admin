@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Location } from './entity/Location';
-import { Subject } from 'rxjs/Subject';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class LocationService {
@@ -13,26 +13,17 @@ export class LocationService {
   constructor(private http: HttpClient) {
   }
 
-  searchByAddress(location: string): Observable<any> {
-    return this.http.get(this.url, {
-        params: new HttpParams()
-          .set('address', location)
-          .set('key', this.key),
-      },
-    );
-  }
-
-  getLocations(term: string, sbj: Subject<Location[]>): void {
+  getLocations(term: string): Observable<Location[]> {
     if (!term.trim()) {
       // if not search term, return empty array.
-      return;
+      return of([]);
     }
 
-    this.http.get(this.url, {
-        params: new HttpParams()
-          .set('address', term)
-          .set('key', this.key),
-      })
+    return this.http.get(this.url, {
+      params: new HttpParams()
+        .set('address', term)
+        .set('key', this.key),
+    })
       .map((response: any) => {
         if (response && response.results) {
           return response;
@@ -49,8 +40,7 @@ export class LocationService {
         return currVars;
       })
       .catch((err: HttpErrorResponse) => {
-        return Observable.of(null);
-      })
-      .subscribe(locations => sbj.next(locations));
+        return new Observable<Location[]>();
+      });
   }
 }
