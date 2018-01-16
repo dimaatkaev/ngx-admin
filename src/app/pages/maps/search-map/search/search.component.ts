@@ -1,9 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Location } from '../entity/Location';
 import { LocationService } from '../location-service.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'ngx-search',
@@ -12,40 +11,32 @@ import { FormControl } from '@angular/forms';
 })
 export class SearchComponent implements OnInit {
   @Output() positionChanged = new EventEmitter<Location>();
-  locations$: Observable<Location[]>;
+  locations$: BehaviorSubject<Location[]> = new BehaviorSubject<Location[]>([]);
   search = new FormControl();
 
   constructor(private locationService: LocationService) {
   }
 
-  onSearch(address: string): void {
-    this.locationService.searchByAddress(address)
-      .map((response: any) => {
-        if (response && response.results) {
-          return response;
-        }
-        throw Error('expired token');
-      })
-      .map((response: any) => {
-        return new Location(response.results[0].geometry.location.lat, response.results[0].geometry.location.lng);
-      })
-      .catch((err: HttpErrorResponse) => {
-        return Observable.of(null);
-      })
-      .subscribe((location: Location) => {
-        if (location) {
-          this.positionChanged.emit(location);
-        }
-      });
-  }
-
   ngOnInit(): void {
-    this.locations$ = this.search
+    this.search
       .valueChanges
       .debounceTime(400)
       .distinctUntilChanged()
-      .switchMap((term: string) => {
-        return this.locationService.getLocations(term);
-      });
+      .withLatestFrom(
+        this.locations$,
+      )
+      .map(([currentTerm, currentLocations]: [string, Location[]]) => {
+        console.log('currentTerm: ', currentTerm, 'currentLocations: ', currentLocations);
+        // check currentTerm in the currentLocations
+        // if exists - fire location changed output
+        // else - get locations for the term
+        for (const location of currentLocations) {
+          if (location.locationName === currentTerm) {
+            this.positionChanged.emit(location);
+            return;
+          }
+        }
+        this.locationService.getLocations(currentTerm, this.locations$);
+      }).subscribe();
   }
 }

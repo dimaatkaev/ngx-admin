@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Location } from './entity/Location';
-import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class LocationService {
@@ -22,13 +22,13 @@ export class LocationService {
     );
   }
 
-  getLocations(term: string): Observable<Location[]> {
+  getLocations(term: string, sbj: Subject<Location[]>): void {
     if (!term.trim()) {
       // if not search term, return empty array.
-      return of([]);
+      return;
     }
 
-    return this.http.get(this.url, {
+    this.http.get(this.url, {
         params: new HttpParams()
           .set('address', term)
           .set('key', this.key),
@@ -50,6 +50,7 @@ export class LocationService {
       })
       .catch((err: HttpErrorResponse) => {
         return Observable.of(null);
-      });
+      })
+      .subscribe(locations => sbj.next(locations));
   }
 }
