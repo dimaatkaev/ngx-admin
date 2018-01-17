@@ -3,6 +3,7 @@ import { Location } from '../entity/Location';
 import { LocationService } from '../location-service.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'ngx-search',
@@ -25,19 +26,20 @@ export class SearchComponent implements OnInit {
       .withLatestFrom(
         this.locations$,
       )
-      .map(([currentTerm, currentLocations]: [string, Location[]]) => {
-        console.log('currentTerm: ', currentTerm, 'currentLocations: ', currentLocations);
+      .switchMap(([currentTerm, currentLocations]: [string, Location[]]) => {
         // check currentTerm in the currentLocations
         // if exists - fire location changed output
         // else - get locations for the term
-        for (const location of currentLocations) {
-          if (location.locationName === currentTerm) {
-            this.positionChanged.emit(location);
-            return;
-          }
+        const chooseLocation: Location = currentLocations.find(location => {
+          return location.locationName === currentTerm;
+        });
+        if (chooseLocation) {
+          this.positionChanged.emit(chooseLocation);
+          return of(currentLocations);
+        } else {
+          return this.locationService.getLocations(currentTerm);
         }
-        this.locationService.getLocations(currentTerm)
-          .subscribe(this.locations$);
-      }).subscribe();
+      })
+      .subscribe(this.locations$);
   }
 }
